@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2025-02-24 14:51:40
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2025-03-05 10:11:38
+ * @LastEditTime: 2025-03-05 10:33:33
  * @FilePath: /threejs-vite-vue/src/lesson/chapter3/index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -24,6 +24,7 @@ const InitMap = async () => {
       style: "default",
       format: "image/jpeg",
       tileMatrixSetID: "GoogleMapsCompatible",
+      maximumLevel: 18,
     })
   );
   var handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
@@ -85,6 +86,26 @@ const InitMap = async () => {
     })
   );
 
+  try {
+    const tileset = await Cesium.Cesium3DTileset.fromUrl(
+      "./public/honggang/tileset.json",
+      {
+        dynamicScreenSpaceError: true,
+        dynamicScreenSpaceErrorDensity: 2.0e-4,
+        dynamicScreenSpaceErrorFactor: 24.0,
+        dynamicScreenSpaceErrorHeightFalloff: 0.25,
+      }
+    );
+    viewer.scene.primitives.add(tileset);
+    // viewer.zoomTo(tileset);
+    viewer.camera.viewBoundingSphere(
+      tileset.boundingSphere,
+      new Cesium.HeadingPitchRange(0, -0.5, 0)
+    );
+    viewer.scene.globe.depthTestAgainstTerrain = false;
+  } catch (error) {
+    console.error(`Error creating tileset: ${error}`);
+  }
   // // 上海中心坐标（经度, 纬度, 高度）
   // // const shanghaiPosition = Cesium.Cartesian3.fromDegrees(121.4737, 31.2304, 800);
   // // 设置初始视角：相机位于上海上空800米，俯视地面中心点，俯仰角45°
@@ -100,16 +121,16 @@ const InitMap = async () => {
 
   viewer.imageryLayers.add(tdtBasicLayer);
   viewer.imageryLayers.add(tdtLabelLayer);
-  viewer.camera.flyTo({
-    destination: Cesium.Cartesian3.fromDegrees(121.489168, 31.338564, 800),
-    orientation: {
-      heading: Cesium.Math.toRadians(0),
-      pitch: Cesium.Math.toRadians(-90),
-      roll: 0,
-    },
+  // viewer.camera.flyTo({
+  //   destination: Cesium.Cartesian3.fromDegrees(121.489168, 31.338564, 800),
+  //   orientation: {
+  //     heading: Cesium.Math.toRadians(0),
+  //     pitch: Cesium.Math.toRadians(-90),
+  //     roll: 0,
+  //   },
 
-    duration: 1, // 可选，动画持续时间
-  });
+  //   duration: 1, // 可选，动画持续时间
+  // });
 };
 
 onMounted(() => {
