@@ -51,6 +51,14 @@ const router = createRouter({
         title: '5'
       }
     },
+    {
+      path: '/chapter6',
+      name: 'Home6',
+      component: () => import('../lesson/chapter6/index.vue'),
+      meta: {
+        title: '6'
+      }
+    },
 
   ],
 });
