@@ -111,6 +111,7 @@ const InitMap = async () => {
   // // 上海中心坐标（经度, 纬度, 高度）
   // // const shanghaiPosition = Cesium.Cartesian3.fromDegrees(121.4737, 31.2304, 800);
   // // 设置初始视角：相机位于上海上空800米，俯视地面中心点，俯仰角45°
+  const _textColor = "rgb(11, 255, 244)";
   loctionList.forEach((item: any) => {
     viewer.entities.add({
       name: item.psName,
@@ -119,6 +120,16 @@ const InitMap = async () => {
         item.longitude * 1,
         item.latitude * 1
       ),
+      label: {
+        text: item.psName,
+        font: "12px monospace",
+        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        // fillColor: Cesium.Color.LIME,
+        fillColor: Cesium.Color.fromCssColorString(_textColor),
+        outlineWidth: 4,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM, // 垂直方向以底部来计算标签的位置
+        pixelOffset: new Cesium.Cartesian2(0, -40), // 偏移量
+      },
       billboard: {
         image: bgImage,
         scale: 0.3,
