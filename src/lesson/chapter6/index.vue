@@ -52,10 +52,14 @@ const InitMap = async () => {
       maximumLevel: 18,
     })
   );
-  var handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
+  var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
   handler.setInputAction(function (click: any) {
     // 使用pick函数获取点击位置的实际位置
+    console.log(click);
     var cartesian = viewer.scene.pickPosition(click.position);
+
+    const pickedObject = viewer.scene.pick(click.position);
+
     if (Cesium.defined(cartesian)) {
       // 将笛卡尔坐标转换为经纬度坐标
       var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
@@ -74,20 +78,22 @@ const InitMap = async () => {
           "，高度：" +
           heightString
       );
-      viewer.camera.flyTo({
-        destination: Cesium.Cartesian3.fromDegrees(
-          parseFloat(longitudeString),
-          parseFloat(latitudeString),
-          500
-        ),
-        orientation: {
-          heading: Cesium.Math.toRadians(0),
-          pitch: Cesium.Math.toRadians(-90),
-          roll: 0,
-        },
+      if (Cesium.defined(pickedObject)) {
+        viewer.camera.flyTo({
+          destination: Cesium.Cartesian3.fromDegrees(
+            parseFloat(longitudeString),
+            parseFloat(latitudeString),
+            500
+          ),
+          orientation: {
+            heading: Cesium.Math.toRadians(0),
+            pitch: Cesium.Math.toRadians(-90),
+            roll: 0,
+          },
 
-        duration: 1, // 可选，动画持续时间
-      });
+          duration: 1, // 可选，动画持续时间
+        });
+      } // 判断是否为当前模型 )
     }
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
@@ -118,6 +124,7 @@ const InitMap = async () => {
         scale: 0.3,
         color: Cesium.Color.YELLOW,
       },
+
       // point: {
       //   pixelSize: 5,
       //   color: Cesium.Color.RED,
@@ -125,6 +132,13 @@ const InitMap = async () => {
       //   outlineWidth: 2,
       // },
     });
+  });
+  viewer.entities.add({
+    id: "myModel",
+    model: {
+      uri: "./public/model/scenedata.glb",
+    },
+    position: Cesium.Cartesian3.fromDegrees(121.488334, 31.338564),
   });
 
   // viewer.zoomTo(billboard);
