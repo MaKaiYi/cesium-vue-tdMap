@@ -88,7 +88,7 @@ const InitMap = async () => {
 
   try {
     const tileset = await Cesium.Cesium3DTileset.fromUrl(
-      "./public/dayanta/tileset.json",
+      "./public/honggang/tileset.json",
       {
         dynamicScreenSpaceError: true,
         dynamicScreenSpaceErrorDensity: 2.0e-4,
