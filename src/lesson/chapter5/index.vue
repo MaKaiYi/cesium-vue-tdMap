@@ -27,53 +27,54 @@ const InitMap = async () => {
       maximumLevel: 18,
     })
   );
-  // var handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
-  // handler.setInputAction(function (click: any) {
-  //   // 使用pick函数获取点击位置的实际位置
-  //   var cartesian = viewer.scene.pickPosition(click.position);
-  //   if (Cesium.defined(cartesian)) {
-  //     // 将笛卡尔坐标转换为经纬度坐标
-  //     var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-  //     var longitudeString = Cesium.Math.toDegrees(
-  //       cartographic.longitude
-  //     ).toFixed(6);
-  //     var latitudeString = Cesium.Math.toDegrees(cartographic.latitude).toFixed(
-  //       6
-  //     );
-  //     var heightString = cartographic.height.toFixed(2);
-  //     console.log(
-  //       "经度：" +
-  //         longitudeString +
-  //         "，纬度：" +
-  //         latitudeString +
-  //         "，高度：" +
-  //         heightString
-  //     );
+  var handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
+  handler.setInputAction(function (click: any) {
+    // 使用pick函数获取点击位置的实际位置
+    var cartesian = viewer.scene.pickPosition(click.position);
+    if (Cesium.defined(cartesian)) {
+      // viewer.entities.removeAll();
+      // 将笛卡尔坐标转换为经纬度坐标
+      var cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+      var longitudeString = Cesium.Math.toDegrees(
+        cartographic.longitude
+      ).toFixed(6);
+      var latitudeString = Cesium.Math.toDegrees(cartographic.latitude).toFixed(
+        6
+      );
+      var heightString = cartographic.height.toFixed(2);
+      console.log(
+        "经度：" +
+          longitudeString +
+          "，纬度：" +
+          latitudeString +
+          "，高度：" +
+          heightString
+      );
 
-  //     // 添加点
-  //     let clickPosition = viewer.scene.camera.pickEllipsoid(click.position);
-  //     viewer.entities.add({
-  //       position: clickPosition,
-  //       point: {
-  //         disableDepthTestDistance: Number.POSITIVE_INFINITY,
-  //         color: Cesium.Color.YELLOW,
-  //         pixelSize: 30,
-  //       },
-  //     });
-  //   }
-  //   // 使用Scene.pick来获取3D Tiles的实际高度
-  //   var pickedObject = viewer.scene.pick(click.position);
-  //   if (Cesium.defined(pickedObject)) {
-  //     // 获取到3D Tiles的高度
-  //     const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-  //     const height = cartographic.height;
-  //     const lon = Cesium.Math.toDegrees(cartographic.longitude).toFixed(6);
-  //     const lat = Cesium.Math.toDegrees(cartographic.latitude).toFixed(6);
-  //     console.log("点击位置的经度是: " + lon);
-  //     console.log("点击位置的纬度是: " + lat);
-  //     console.log("点击位置的高度是: " + height);
-  //   }
-  // }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+      // 添加点
+      let clickPosition = viewer.scene.camera.pickEllipsoid(click.position);
+      viewer.entities.add({
+        position: clickPosition,
+        point: {
+          disableDepthTestDistance: Number.POSITIVE_INFINITY,
+          color: Cesium.Color.YELLOW,
+          pixelSize: 30,
+        },
+      });
+    }
+    // 使用Scene.pick来获取3D Tiles的实际高度
+    var pickedObject = viewer.scene.pick(click.position);
+    if (Cesium.defined(pickedObject)) {
+      // 获取到3D Tiles的高度
+      const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+      const height = cartographic.height;
+      const lon = Cesium.Math.toDegrees(cartographic.longitude).toFixed(6);
+      const lat = Cesium.Math.toDegrees(cartographic.latitude).toFixed(6);
+      console.log("点击位置的经度是: " + lon);
+      console.log("点击位置的纬度是: " + lat);
+      console.log("点击位置的高度是: " + height);
+    }
+  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
   // 加载天地图影像地理标签
   const tdtLabelLayer = new Cesium.ImageryLayer(
@@ -102,10 +103,20 @@ const InitMap = async () => {
       tileset.boundingSphere,
       new Cesium.HeadingPitchRange(0, -0.5, 0)
     );
+    viewer.entities.add({
+      position: Cesium.Cartesian3.fromDegrees(114.158426, 22.282048, 0),
+      ellipse: {
+        semiMinorAxis: 400.0,
+        semiMajorAxis: 400.0,
+        material: Cesium.Color.BLUE.withAlpha(0.3), //可设置不同的MaterialProperty
+      },
+    });
+
     viewer.scene.globe.depthTestAgainstTerrain = false;
   } catch (error) {
     console.error(`Error creating tileset: ${error}`);
   }
+
   // // 上海中心坐标（经度, 纬度, 高度）
   // // const shanghaiPosition = Cesium.Cartesian3.fromDegrees(121.4737, 31.2304, 800);
   // // 设置初始视角：相机位于上海上空800米，俯视地面中心点，俯仰角45°
