@@ -12,6 +12,10 @@ const router = createRouter({
 
   routes: [
     {
+      path: '/',
+      redirect: () => 'chapter3'// 动态查找第一个有效路由
+    },
+    {
       path: '/chapter1',
       name: 'Home',
       component: () => import('../lesson/chapter1/index.vue'),

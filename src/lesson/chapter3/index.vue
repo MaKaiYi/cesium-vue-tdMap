@@ -60,5 +60,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="cesiumContainer" style="width: 100%; height: 100vh"></div>
+  <div
+    id="cesiumContainer"
+    style="width: 100%; height: calc(100vh - 40px)"
+  ></div>
 </template>
